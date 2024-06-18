@@ -16,7 +16,10 @@ execute:
 library(tidyverse)
 ```
 
+# Schema
 
+id | text | label | label_text | source
+ 
 # Publicly Available
 
 Kaggle dataset takes from [Spam Assassin](https://spamassassin.apache.org/old/publiccorpus/) which was created in the early 2000's, so we could do with something more modern...
@@ -43,46 +46,9 @@ kaggle_spam <- kaggle_spam %>%
                             0 ~ "not_spam"),
          id = paste0("kaggle_", row_number())) %>%
   relocate(id, text, label, label_text, source)
+
+# write_csv(kaggle_spam, here("data/corpus/kaggle_spam.csv"))
 ```
-
-Small EDA on Kaggle data.
-```{r}
-kaggle_spam %>%
-  filter(label == "spam") %>%
-  sample_n(10) %>%
-  pull(text)
-
-kaggle_spam %>%
-  mutate(number_counts = str_count(text, "NUMBER")) %>%
-  summarise(
-    min = min(number_counts),
-    max = max(number_counts),
-    mean = mean(number_counts),
-    median = median(number_counts),
-    .by = label
-  )
-
-kaggle_spam %>%
-  mutate(number_counts = str_count(text, "hyperlink|url")) %>%
-  summarise(
-    min = min(number_counts),
-    max = max(number_counts),
-    mean = mean(number_counts),
-    median = median(number_counts),
-    .by = label
-  )
-
-kaggle_spam %>%
-  mutate(string_length = str_length(text)) %>%
-  summarise(
-    min = min(string_length),
-    max = max(string_length),
-    mean = mean(string_length),
-    median = median(string_length),
-    .by = label
-  )
-```
-
 
 # Internal
 
@@ -96,7 +62,6 @@ data_files <- list.files(ds_pj,
 
 
 ```
-
 
 # Synthetic Data
 

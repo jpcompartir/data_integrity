@@ -1,0 +1,54 @@
+---
+title: "Data Analysis on Corpus"
+---
+
+
+```{r}
+library(tidyverse)
+kaggle_spam <- read_csv(here("data/corpus/kaggle_spam.csv"))
+```
+
+TODO: read in Kaggle data
+Small exploration  of Kaggle data:
+
+Inspect data
+```{r}
+kaggle_spam %>%
+  filter(label == "spam") %>%
+  sample_n(10) %>%
+  pull(text)
+```
+
+
+```{r}
+kaggle_spam %>%
+  mutate(number_counts = str_count(text, "NUMBER")) %>%
+  summarise(
+    min = min(number_counts),
+    max = max(number_counts),
+    mean = mean(number_counts),
+    median = median(number_counts),
+    .by = label
+  )
+
+kaggle_spam %>%
+  mutate(number_counts = str_count(text, "hyperlink|url")) %>%
+  summarise(
+    min = min(number_counts),
+    max = max(number_counts),
+    mean = mean(number_counts),
+    median = median(number_counts),
+    .by = label
+  )
+
+kaggle_spam %>%
+  mutate(string_length = str_length(text)) %>%
+  summarise(
+    min = min(string_length),
+    max = max(string_length),
+    mean = mean(string_length),
+    median = median(string_length),
+    .by = label
+  )
+```
+
