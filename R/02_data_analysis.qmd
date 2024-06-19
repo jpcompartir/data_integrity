@@ -11,16 +11,17 @@ kaggle_spam <- read_csv(here("data/corpus/kaggle_spam.csv"))
 TODO: read in Kaggle data
 Small exploration  of Kaggle data:
 
-Inspect data
-```{r}
+Inspect data - it looks like these posts could be useful but they'll be insufficient alone - expected due to their age (early 2000s) and their domain (emails). Another issue may be their length and their processing. 
+```{r, kaggle_spam_samples}
 kaggle_spam %>%
-  filter(label == "spam") %>%
+  filter(label_text == "spam") %>%
   sample_n(10) %>%
   pull(text)
 ```
 
 
-```{r}
+Spam tends to be slightly longer, have more hyperlinks (though the median is 0) and on average contain more numbers (mean 12.2 v 49.2), though the median is 7 vs 8 showing the skewing effect of the max numbers (one spam post had 15,885).
+```{r, kaggle_spam_summaries}
 kaggle_spam %>%
   mutate(number_counts = str_count(text, "NUMBER")) %>%
   summarise(

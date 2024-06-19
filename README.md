@@ -17,9 +17,10 @@ What is spam?
 Inputs string of text
 Outputs spam/no spam classification
 
-- [ ] Search HF Hub and other sources for publicly available datasets which may comprise part of the corpus. One issue is public datasets tend to have bad labels. 
+- [x] Search HF Hub and other sources for publicly available datasets which may comprise part of the corpus. One issue is public datasets tend to have bad labels. 
 - [ ] Collect & label examples of spam vs not spam from previous project work
 - [ ] Create training, test, holdout splits
+- [ ] Create + expand products & companies dictionary to mask those tokens (or convert to company, product etc.)
 - [ ] Use transfer learning approach to fine tune an encoder-only (probably RoBERTa) model to serve as base model
 - [ ] Evaluate base model - tune probability cut-off against precision & recall
 - [ ] Dataset ablations - e.g. not using any publicly available data vs combining datasets
