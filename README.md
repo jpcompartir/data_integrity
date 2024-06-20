@@ -1,7 +1,9 @@
-# data_integrity
-Models and algorithms for measuring data quality for opinion mining in web-based documents.
+# Data Integrity
+
+Models and algorithms for measuring data quality for opinion mining in web-based documents. 
 
 # Goals
+Heuristics for data quality
 Models for spam classification, spam label, data quality
 Explore sqlite vs DuckDB + Arrow combination
 Streamlined inference e.g. via Hugging Face Inference Endpoints -> Local via Docker, or web via request
@@ -19,6 +21,8 @@ Outputs spam/no spam classification
 
 - [x] Search HF Hub and other sources for publicly available datasets which may comprise part of the corpus. One issue is public datasets tend to have bad labels. 
 - [ ] Collect & label examples of spam vs not spam from previous project work
+  - [ ] Use data cleaning heuristics to shrink dataset size and save time labelling, e.g. our previous work + Meta text qual paper.
+  - [ ] Implement into LimpiaR as per [Text quality issue](https://github.com/jpcompartir/LimpiaR/issues/65)
 - [ ] Create training, test, holdout splits
 - [ ] Create + expand products & companies dictionary to mask those tokens (or convert to company, product etc.)
 - [ ] Use transfer learning approach to fine tune an encoder-only (probably RoBERTa) model to serve as base model
