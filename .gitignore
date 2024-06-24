@@ -3,9 +3,12 @@
 .Rhistory
 *.Rproj
 
+<<<<<<< HEAD
 # Data-heavy folders
 data/
 viz/
+=======
+>>>>>>> eb4fa3dfd84aa564c710f2b0376f7391dcc25ba4
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
