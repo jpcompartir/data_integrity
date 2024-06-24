@@ -1,0 +1,22 @@
+---
+title: "04_data_labelling"
+format: html
+editor: visual
+---
+
+# Process
+
+1. get data from various projects out of the spam_grams function for spam candidates, and documents labelled as belonging to HSDBscan topics that have been used in deliveries as non-spam (also some GPT4-classified peak/pits posts would be v handy).
+2. Labelling categories for first pass - spam, not_spam, slop (stinks of Altman)
+
+Notable False positives in 758 spam grams (just collect some, not all)
+"I will never EVER use Microsoft Edge as my default browser, but as our eternal tussle continues, I have to acknowledge that part of me admires my old foe's tenacity."
+
+Because the posts are from too wide-a-range of sources, they tend to have adverts contained in the scraped text, e.g. "Update to Microsoft Edge to make use of the latest functions, safety updates, and complex guidance." this one line in the bottom of the blog post is enough to flag the post as spam. So it's a question of either 1) chunking by sentence/paragraph or 2) being selective with sources.
+
+These are the ads nested within blog posts that pull in a lot of irrelevant posts.
+"Improve to Microsoft Edge to reap the benefits of the latest features, safety updates, and technical assistance...Up grade to Microsoft Edge to take advantage of the most up-to-date options, safety updates, and specialized help..."
+
+
+"The browser you are utilizing is not supported on This page. It is very suggested that you just use the newest versions of a supported browser as a way to obtain an optimum viewing knowledge. The
+websitenext browsers are supported: Chrome, Edge (v80 and later), Firefox and Safari."

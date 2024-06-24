@@ -1,0 +1,184 @@
+---
+title: "Data Quality Heuristics"
+format:
+  html:
+    embed-resources: true
+editor:
+  render-on-save: true
+---
+
+Outlined in this [Meta inc. paper](https://arxiv.org/pdf/2405.01582) are heuristics for cleaning massive corpora of internet text data ready for training with LLMs. We can use similar to estimate the quality of a document without leveraging Machine Learning. The score could also factor as a feature.
+
+# Implementation To-do list
+
+-   [ ] has_first_letter_caps       
+-   [ ] no_all_caps                 
+-   [ ] word_repetition_ratio_ge_0_2
+-   [ ] digit_punctuation_ratio_0_25
+-   [ ] no_special_characters       
+-   [ ] stop_word_match_2           
+-   [ ] javascript_flag             
+-   [ ] token_count_ge_3            
+-   [ ] word_count_3_256            
+-   [ ] has_object                  
+-   [ ] has_noun                    
+-   [ ] has_determiner              
+-   [ ] text_complexity_c1     
+-   [ ] xxx
+
+
+## Table of Heuristics
+| filter_name                  | heuristic                       | description                                                                                                                                 |
+| ---------------------------- | ------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------- |
+| has_first_letter_caps        | First character capitalized     | Check if first character of each line is capitalized.                                                                                       |
+| no_all_caps                  | All characters capitalised      | Check if all the characters in the line are capitalized                                                                                     |
+| word_repetition_ratio_ge_0_2 | Word repetition ratio           | Check if ratio of repetition for word in line is > 0.2                                                                                      |
+| digit_punctuation_ratio_0_25 | Digit/punctuation to word ratio | Identify lines with ratio of digits/punctuation to words in a line is > 0.25.                                                               |
+| no_special_characters        | Has { character                 | Flower brackets are usually common in code as we are curating for text only content this filter identifies text that might contain code.    |
+| terminal_punctuation         | Has terminal punctuation        | Check if the lines end with one of these puntuation marks - ’.’, ’!’, ’?’, ’"’.                                                             |
+| stop_word_match_2            | Has 2 stop words                | Check if the line contains at least 2 stop words among ’the’, ’be’, ’to’, ’of’, ’and’, ’that’, ’have’, ’with’.                              |
+| javascript_flag              | Contains special phrases C      | Check if text contains phrases ’javascript’ or ’lorem ipsum’ to identify docs with code.                                                    |
+| token_count_ge_3             | Token count                     | Check if the token count is > 3                                                                                                             |
+| word_count_3_256             | Word count range                | Check if line word count is > 3 and < 256.                                                                                                  |
+| has_object                   | Has object                      | check if there is object identified by parser                                                                                               |
+| has_noun                     | Has noun                        | Check if there is at least one noun in the line.                                                                                            |
+| has_determiner               | Has determiner                  | Check if the line contains determiner based on results from text parser                                                                     |
+| text_complexity_c1           | Text complexity                 | For this we use setup similar to CAT filter(Radenovic et al., 2023), where lines with atleast one edge from object are flagged as positive. |
+
+
+
+
+
+## Scoring
+
+We'll need to edit the function somewhat as they derive the weights via calculating the heuristic's effect on perplexity - i.e. when the filter is applied what effect does it have on perplexity, vs when it's not applied. We'll need our own way of creating the weights.
+
+For inspiration, they calculate the weights as:
+
+$$w_i = max(0, \frac{PPL_\text{all} - PPL_i}{PPL_\text{all}})$$
+
+Scoring lines formula:
+$$\text{score}_\text{line} = \frac{\sum_{i=1}^{F} w_iI_i(line)}{\sum_{i=1}^{F} w_i}$$
+where:
+
+$\text{score}_\text{line}$ is the quality score.<br>
+$w_i$ is the weight for the filter $i$ <br>
+$F$ is the number of filters used <br>
+$I_i$ is the indicator function or filter i <br>
+
+Scoring lines in code:
+
+Scoring documents:
+
+<blockquote> In this step each document in the dataset is split into lines based on common sentence end markers like period or HTML end tags and for each line all the heuristic filters are applied that results in an indicator matrix $I$ where:
+$I_i(line) = 1$ indicates that line satisfies the $i_{th}$ filter criteria. Then we use the weights calculated in the above step to get quality score per line.
+
+This can be formulated as:
+
+$$\text{score}_\text{doc} = \frac{\sum_{\text{line}=1}^{n} tc_\text{line}\text{score}_\text{line}}{\sum_{\text{line=1}}^{n} tc_\text{line}} $$
+
+Where $\text{score}_\text{doc}$ is the aggregated quality score for the doc
+$\text{tc}_\text{line}$ is the token count for the line
+$\text{score}_\text{line}$ is the score for the line and n is the total count of lines in the doc.
+Explored percentile filtering - top 20%, 40%, 60% and 80% and observe the effect on perplexity
+
+Scoring documents in code:
+
+## Implementations
+
+```{r}
+data <- ParseR::sprinklr_export[1:100, c("Message", "UniversalMessageId")] %>% janitor::clean_names()
+```
+
+What should these individual functions return, a logical or a new column, matrix, or data frame?
+It makes sense that we work with matrices for performance, but might be trickier for people to use.
+
+```{r, extract_sentences}
+library(tidyverse)
+library(vctrs)
+library(testthat)
+
+limpiar_extract_sentences <- function(data, text_var, id_var) {
+  
+  text_sym <- rlang::ensym(text_var)
+  id_sym <- rlang::ensym(id_var)
+  
+  data <- dplyr::select(data, !!text_sym, !!id_sym)
+  
+  sentence_df <- tidytext::unnest_sentences(data, input = !!text_sym, output = "sentence", to_lower = FALSE, drop = FALSE, )
+  
+  return(sentence_df)
+}
+
+sentences <- limpiar_extract_sentences(data, message, universal_message_id)
+
+
+test_extract_sentences <- testthat::test_that()
+```
+
+
+
+```{r, first_letter_caps}
+limpiar_dq_first_letter_cap <- function(data, sentence_var) {
+  
+  sentence_sym <- rlang::ensym(sentence_var)
+  
+  data$first_letter_cap <- grepl("^[A-Z]", data[[sentence_sym]])
+  
+  return(data)
+  
+}
+
+
+test_first_letter_cap <- testthat::test_that(
+  "First letter is capped",{
+    data <- data.frame(sentence = c("The old man", "@an_old_man="))
+    
+    test_data <-limpiar_dq_first_letter_cap(data, sentence)
+    
+    expect_true(test_data[1, 2])
+    expect_false(test_data[2, 2])
+  }
+)
+
+
+sentences <- limpiar_dq_first_letter_cap(sentences, "sentence")
+
+limpiar_dq_all_cap <- function(data, sentence_var) {
+  
+  
+  
+}
+
+
+sentences[[1, "sentence"]] == toupper(sentences[1, "sentence"])
+
+"THIS SENTENCE IS ALL CAPS 782 AND NUMBERS" == toupper("THIS SENTENCE IS ALL CAPS 782 AND NUMBERS")
+```
+
+
+```{r}
+
+limpiar_dq_score_sentence <- function() {
+  
+  limpiar_score_line_matrix <- function() {
+  
+}
+}
+
+limpiar_dq_score_document <- function() {
+  
+}
+```
+
+## Testing the implementation on Edge Dataset
+
+1. Add spam_grammed TRUE/FALSE column to the removed and the non-removed data 
+2. Run the data quality pipeline over all of the data
+3. Compare the scores of the data quality of spam vs not spam
+4. Inspect the spam scores that have a high data quality score, and the not spam that have a low data quality score. Specifically select data from these for the corpus.
+
+
+## Creating our own heuristics/composite score
+Emojis, URLs, special characters, all caps
+
