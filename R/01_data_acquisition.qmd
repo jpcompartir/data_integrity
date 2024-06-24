@@ -80,11 +80,19 @@ edge_758_spam <- edge_758_spam %>% filter(string_length < 5000)
 edge_758_spam %>%
   select( text = message) %>%
   mutate(label = "") %>%
-  slice_sample(n = 5000) %>%
-  write_csv("~/Documents/doccano_test.csv")
+  slice_sample(n = 5000) #%>%
+  # write_csv("~/Documents/doccano_test.csv")
 
 edge_758_spam %>%
   count(social_network)
+
+edge_758_spam %>%
+  filter(social_network != "WEB") %>%
+  select(text = message) %>%
+  mutate(label = "") %>% 
+  filter(str_detect(text, "Improve to Microsoft Edge "))
+  sample_n(2000) #%>%
+  # write_csv("~/Documents/doccano_edge_spam_not_web.csv")
 ```
 
 Sample some outputs to see what type of spam we're dealing with.

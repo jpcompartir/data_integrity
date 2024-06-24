@@ -2,11 +2,13 @@
 title: "Data Analysis on Corpus"
 ---
 
+# Kaggle Data
 
 ```{r}
 library(tidyverse)
 kaggle_spam <- read_csv(here("data/corpus/kaggle_spam.csv"))
 ```
+
 
 TODO: read in Kaggle data
 Small exploration  of Kaggle data:
@@ -53,3 +55,11 @@ kaggle_spam %>%
   )
 ```
 
+# Edge Data
+```{r}
+# read in from 01_data_acquisition.qmd
+edge_758_spam %>%
+  filter(str_detect(message, "The following browsers are supported")) # 1.3k / 60k
+```
+
+ 

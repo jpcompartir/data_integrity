@@ -9,14 +9,67 @@ editor: visual
 1. get data from various projects out of the spam_grams function for spam candidates, and documents labelled as belonging to HSDBscan topics that have been used in deliveries as non-spam (also some GPT4-classified peak/pits posts would be v handy).
 2. Labelling categories for first pass - spam, not_spam, slop (stinks of Altman)
 
+## False Positives
 Notable False positives in 758 spam grams (just collect some, not all)
 "I will never EVER use Microsoft Edge as my default browser, but as our eternal tussle continues, I have to acknowledge that part of me admires my old foe's tenacity."
 
-Because the posts are from too wide-a-range of sources, they tend to have adverts contained in the scraped text, e.g. "Update to Microsoft Edge to make use of the latest functions, safety updates, and complex guidance." this one line in the bottom of the blog post is enough to flag the post as spam. So it's a question of either 1) chunking by sentence/paragraph or 2) being selective with sources.
+"Every website and app does a Spotify Wrapped type of deal now… just got a “year in review” feature suggested for the Microsoft Edge web browser. Enough."
+
+## Spam Patterns
+
+Because the posts are from too wide-a-range of sources, they tend to have adverts contained in the scraped text, e.g. "Update to Microsoft Edge to make use of the latest functions, safety updates, and complex guidance." this one line in the bottom of the blog post is enough to flag the post as spam. So it's a question of either 1) chunking by sentence/paragraph or 2) being selective with sources. These SEO-optimised ads are pretty problematic.
 
 These are the ads nested within blog posts that pull in a lot of irrelevant posts.
 "Improve to Microsoft Edge to reap the benefits of the latest features, safety updates, and technical assistance...Up grade to Microsoft Edge to take advantage of the most up-to-date options, safety updates, and specialized help..."
 
+### Scraping artifacts 
+
+"I am a bot, and this action was performed automatically"
+
+"The browser you are employing is now not supported on this site"
 
 "The browser you are utilizing is not supported on This page. It is very suggested that you just use the newest versions of a supported browser as a way to obtain an optimum viewing knowledge. The
 websitenext browsers are supported: Chrome, Edge (v80 and later), Firefox and Safari."
+
+"The following browsers are supported: Chrome, Edge (v80 and later), Firefox and Safari. " 1.3k/60k
+
+"It appears the world wide web browser you might be applying would not aid some of the aztributes of This website. For the very best encounter, we suggest applying a contemporary browser that supports the functions of this Web site. We propose Google Chrome, Mozilla Firefox, or Microsoft Edge"
+
+"The browser you will be employing is no more supported on This web site. It is extremely encouraged you use the latest versions of the supported browser as a way to receive an ideal viewing expertise. The next browsers are supported: Chrome, Edge (v80 and later), Firefox and Safari."
+
+"Improve to Microsoft Edge to take advantage of the most recent options, safety updates, and technological assistance."
+
+"Enhance to Microsoft Edge to benefit from the latest characteristics, protection updates, and complex assistance."
+
+"Upgrade to Microsoft Edge to make use of the most up-to-date options, stability updates, and specialized help."
+
+"The world wide web Browser you happen to be presently applying is unsupported, and many functions of this site may not operate as intended. Remember to update to a modern browser such as Chrome, Firefox or Edge to experience all characteristics Michigan.gov has to offer."
+
+"We’ve detected that you are applying an outdated browser. "
+
+"The browser you're making use of is not supported on This great site. It is very encouraged you use the newest versions of a supported browser in an effort to obtain an best viewing practical experience. The next browsers are supported: Chrome, Edge (v80 and later), Firefox and Safari."
+
+"The next browsers are supported: Chrome, Edge (v80 and later on), Firefox and Safari. "
+
+"Remember to update to a modern browser which include Chrome, Firefox or Edge to encounter all characteristics"
+
+"As of January 1st, 2020, PlayNow.com not supplies browser aid for IE eleven. If you choose to utilize IE eleven we can not ensure you should be able to login or use the internet site. We suggest you switch to the most recent Edition of both Edge, Firefox or Chrome."
+
+"Different people use different web browsers to obtain your internet site. Your chosen template needs to be compatible with preferred browsers like Google Chrome, Mozilla Firefox, Safari, and Microsoft Edge."
+
+"The net Browser you're currently working with is unsupported"
+
+### Crossfire
+"is compatible with Chrome, Microsoft Edge, Internet Explorer, Firefox, Safari, and Opera."
+
+"This reward is highly special and Generally only accessible to significant-amount students since it provides you with an unfair edge in excess of everyone else."
+
+"14-inch Micro-edge HD Display,"
+
+"Morningstar analysts hand-select immediate rivals or similar businesses to provide context over the energy and longevity of INFY’s aggressive edge."
+
+"critical edge... advertising edge"
+
+"slicing-edge"
+
+"beveled edge"

@@ -3,6 +3,7 @@
 Models and algorithms for measuring data quality for opinion mining in web-based documents. 
 
 # Goals
+
 Heuristics for data quality
 Models for spam classification, spam label, data quality
 Explore sqlite vs DuckDB + Arrow combination
@@ -31,17 +32,18 @@ Outputs spam/no spam classification
 - [x] Search HF Hub and other sources for publicly available datasets which may comprise part of the corpus. One issue is public datasets tend to have bad labels. 
 - [ ] Collect & label examples of spam vs not spam from previous project work
   - [ ] Use data cleaning heuristics to shrink dataset size and save time labelling, e.g. our previous work + Meta text qual paper.
+  - [ ] Host Doccano (or other labelling tool) on EC2/some server/Google Cloud if I can acess
   - [ ] Implement into LimpiaR as per [Text quality issue](https://github.com/jpcompartir/LimpiaR/issues/65)
 - [ ] Create training, test, holdout splits
 - [ ] Create + expand products & companies dictionary to mask those tokens (or convert to company, product etc.)
 - [ ] Use transfer learning approach to fine tune an encoder-only (probably RoBERTa) model to serve as base model
 - [ ] Evaluate base model - tune probability cut-off against precision & recall
 - [ ] Dataset ablations - e.g. not using any publicly available data vs combining datasets
-- [ ] Use logprobs to identify problematic labels and refine dataset, then re-evaluate (precision/recall trade-offs)
+- [ ] Use log probs to identify problematic labels and refine dataset, then re-evaluate (precision/recall trade-offs)
 - [ ] Re-train, evaluate
 - [ ] Save to hub + deploy via HF Inference Endpoints
 
-- [ ] Explore distilling model in to simpler ML model (feature extraction e.g. # of hashtags, links etc. + SVM/RF )
+- [ ] Explore distilling model in to simpler ML/statistical model (feature extraction e.g. # of hashtags, links etc. + SVM/RF )
 
 ## Second model - multi-class
 Inputs string of text
@@ -61,18 +63,18 @@ Prompt first -> fine-tune
 
 # Implementation To-do list
 
--   [ ] has_first_letter_caps       
--   [ ] all_caps                 
--   [ ] word_repetition_ratio_ge_0_2
--   [ ] digit_punctuation_ratio_0_25
--   [ ] no_special_characters       
--   [ ] stop_word_match_2           
--   [ ] javascript_flag             
--   [ ] token_count_ge_3            
--   [ ] word_count_3_256            
--   [ ] has_object                  
--   [ ] has_noun                    
--   [ ] has_determiner              
+-   [x] has_first_letter_caps       
+-   [x] all_caps                 
+-   [x] word_repetition_ratio_ge_0_2
+-   [x] digit_punctuation_ratio_0_25
+-   [x] no_special_characters       
+-   [x] stop_word_match_2           
+-   [x] javascript_flag             
+-   [x] token_count_ge_3            
+-   [x] word_count_3_256            
+-   [x] has_object                  
+-   [x] has_noun                    
+-   [x] has_determiner              
 -   [ ] text_complexity_c1     
 -   [ ] xxx
 
@@ -112,3 +114,11 @@ docker container create --name doccano \
   Create project
   
 Creating new users:
+
+Searching labels:
+go to datasets type 'label:spam' to see spam, or 'label:not_spam' etc. but make sure no spaces as 'label: spam' will look for spam pre-fixed with space
+
+Hosting on EC2 or Google Cloud:
+
+https://doccano.github.io/doccano/setup_cloud_storage/
+

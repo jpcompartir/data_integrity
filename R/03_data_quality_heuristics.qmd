@@ -182,3 +182,29 @@ limpiar_dq_score_document <- function() {
 ## Creating our own heuristics/composite score
 Emojis, URLs, special characters, all caps
 
+
+
+Cleaning Reddit nested Quotes - needs to include new line and posts starts with quote...
+```{r}
+reddit_quotes <- edge_758_spam %>%
+  filter(str_detect(message, "Wow microsoft edge is even the default browser, what a patron saint of microsoft")) %>% select(social_network, message, permalink)
+ 
+reddit_quotes %>%
+  mutate(message_trimmed = str_remove_all(message, ">.*?\n"))
+```
+
+Doesn't quite work
+
+```{r}
+edge_758_spam %>%
+  filter(social_network == "REDDIT") %>%
+  select(message, sender_screen_name, title, permalink) %>%
+  LimpiaR::limpiar_link_click(permalink) %>%
+  mutate(has_quote = str_detect(message, "\n>.*?\n|^>\n.*?\n")) %>%
+  filter(has_quote) %>% 
+  mutate(
+    message_trimmed = str_remove_all(message, "^>.*?\n"),
+    message_trimmed = str_remove_all(message, "\n>.*?\n")) %>%
+  DT::datatable(escape=FALSE)
+```
+
